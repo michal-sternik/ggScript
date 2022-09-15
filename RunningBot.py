@@ -245,6 +245,7 @@ class RunningBot():
         isRunning = self.checkIfGameRuns()
         if not isRunning:
             self.runAndFullScreen()
+            sleep(1800) #sleep if game crashed to avoid crash once again
 
 # if __name__ == "__main__":
 #     iterationNumber = input("Select number of iterations (o for loop): ")
