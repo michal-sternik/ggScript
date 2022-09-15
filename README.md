@@ -3,9 +3,6 @@
 Program lets you earn money by creating new accounts and transfering them to your main account.
 
 
-
-
-
 ## FAQ
 
 #### - How much can i earn?
@@ -14,19 +11,23 @@ Program lets you earn 10 000$ per 2 minutes (one iteration), which is 300 000$ p
 
 #### - How to use?
 
-- Main lets you select number of iterations, if you select 0 the program would run endlessly.
-- After starting a program you have 2 seconds to alt-tab to Goodgame Gangster home screen
+- Run application
+- Enter boosted account's username
+- Enter iteration type (finite/infinite)
+- (optional) Enter number of iterations
+- Press start
 
 
 
-## Usage/Examples
 
-```python
-if __name__ == "__main__":
-    iterationNumber = input("Select number of iterations (0 for loop): ")
-    #enter amount=0 for infinite loop
-    time.sleep(2)
-    iteration(amount=iterationNumber)
-    input("Press any key to exit...")
-```
+## Screenshots
+- Main menu
+![App Screenshot](https://i.imgur.com/6qCFTAj.png)
+- Settings Tab
+![App Screenshot](https://i.imgur.com/ldovnhh.png)
+Graphics were made in Photoshop
+## Appendix
+
+- If program runs for longer time it may automatically close your Goodgame Gangster game. Then you have to wait for a while (approximately 30 minutes) and you can run script again.
+- To stop a script move your mouse to the top left corner of your screen (to trigger pyautogui fail-safe procedure)
 
