@@ -30,8 +30,7 @@ class RunningBot():
         h_proc, h_thr, pid, tid = win32process.CreateProcess(None, self.EXE_NAME, None, None, False, 0, None, None, si)
         print(h_proc, h_thr, pid, tid)
 
-    def runApplication(self, iterationNumber, playersName, application):
-        application.destroy()
+    def runAndFullScreen(self):
         self.main()
         s = None
         while True:
@@ -40,10 +39,21 @@ class RunningBot():
             else:
                 break
         sleep(1)
-        self.fastclick(s.left+50, s.top+20)
+        self.fastclick(s.left + 50, s.top + 20)
         print("clicked")
-        self.fastclick(s.left+50, s.top+20)
+        self.fastclick(s.left + 50, s.top + 20)
         print("clicked")
+
+    def checkIfGameRuns(self):
+        s = pyautogui.locateOnScreen("images/screenshot8.png")
+        if s is None:
+            return False
+        else:
+            return True
+
+    def runApplication(self, iterationNumber, playersName, application):
+        application.destroy()
+        self.runAndFullScreen()
         sleep(3)
 
         logoutButton = pyautogui.locateOnScreen("images/logout.png")
@@ -56,10 +66,9 @@ class RunningBot():
             click(960, 730)  # reconnect button
             sleep(1)
 
-        self.iteration(iterationNumber, playersName) #here we gonna run script
+        self.iteration(iterationNumber, playersName)  # here we gonna run script
         print("Iterations done!")
         time.sleep(2)
-
 
     def click(self, x, y):
         win32api.SetCursorPos((x, y))
@@ -75,7 +84,6 @@ class RunningBot():
         win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP, 0, 0)
         time.sleep(0.1)
 
-
     def clickAndDrag(self, startX, startY, endX, endY):
         win32api.SetCursorPos((startX, startY))
         win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN, 0, 0)
@@ -84,13 +92,11 @@ class RunningBot():
         win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP, 0, 0)
         time.sleep(0.5)
 
-
     def typeLogin(self):
         global login
         login = self.generateRandomInput(15)
         for i in login:
             pyautogui.keyDown(i)
-
 
     def typeEmail(self):
         domain = self.generateRandomInput(random.randint(5, 10))
@@ -98,18 +104,15 @@ class RunningBot():
         for i in email:
             pyautogui.keyDown(i)
 
-
     def typePassword(self):
         for i in login:
             pyautogui.keyDown(i)
 
-
     def generateRandomInput(self, length):
         # choose from all lowercase letter
-        letters = string.ascii_lowercase #+ "1234567890" without numbers because of wrong names sometimes (still little probability of creating two same accounts)
+        letters = string.ascii_lowercase  # + "1234567890" without numbers because of wrong names sometimes (still little probability of creating two same accounts)
         result_str = ''.join(random.choice(letters) for i in range(length))
         return result_str
-
 
     def createAccount(self):
         click(953, 557)  # new here? button
@@ -124,7 +127,6 @@ class RunningBot():
         click(975, 694)  # accept rules
         click(1136, 900)  # continue
         time.sleep(3)
-
 
     def tutorial(self):
         click(1045, 544)  # tutorial
@@ -153,7 +155,6 @@ class RunningBot():
         time.sleep(0.4)
         click(789, 965)  # godfather
         click(1187, 672)  # okay button
-
 
     def selling(self):
         click(699, 957)  # character tab
@@ -204,7 +205,6 @@ class RunningBot():
         self.clickAndDrag(495, 526, 1524, 611)  # sell 2nd food
         time.sleep(1)
 
-
     def battle(self, name):
         click(872, 965)  # duel tab
         click(1151, 744)  # okey button
@@ -218,13 +218,11 @@ class RunningBot():
             click(959, 875)  # skip battle
             click(959, 548)  # okay button
 
-
     def logout(self):
         click(1588, 58)  # logout button
         time.sleep(2)
         click(960, 730)  # reconnect button
         time.sleep(2)
-
 
     def game(self, name):
         self.tutorial()
@@ -232,17 +230,21 @@ class RunningBot():
         self.battle(name)
         self.logout()
 
-
     def iteration(self, amount, name):
         counter = 0
         while True:
             self.createAccount()
             self.game(name)
             counter += 1
+            self.resotreIfCrashed()
             print(r'Iteration number {} done!'.format(counter))
             if amount == counter:
                 break
 
+    def resotreIfCrashed(self):
+        isRunning = self.checkIfGameRuns()
+        if not isRunning:
+            self.runAndFullScreen()
 
 # if __name__ == "__main__":
 #     iterationNumber = input("Select number of iterations (o for loop): ")
@@ -250,4 +252,3 @@ class RunningBot():
 #     #enter amount=0 for infinite loop
 #     iteration(iterationNumber, playersName)
 #     input("Press any key to exit...")
-

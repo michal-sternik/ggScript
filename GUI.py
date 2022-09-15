@@ -7,6 +7,8 @@ import time
 from tkinter import *
 from PIL import Image, ImageTk
 # from ggscrpit import runApplication
+from PIL.Image import Resampling
+
 from RunningBot import RunningBot
 
 DEFAULTAMOUNT = 10
@@ -29,11 +31,11 @@ class Settings(tk.Frame):
     def create_background(self):
 
         # images
-        self.photo = ImageTk.PhotoImage(Image.open('images/logo.png').resize((950, 500), Image.ANTIALIAS))
+        self.photo = ImageTk.PhotoImage(Image.open('images/logo.png').resize((950, 500), Resampling.LANCZOS))
         self.backround_photo = ImageTk.PhotoImage(
-            Image.open('images/settingsbackground.png').resize((870, 420), Image.ANTIALIAS))
-        self.photo_save = ImageTk.PhotoImage(Image.open('images/saveandquit.png').resize((262, 57), Image.ANTIALIAS))
-        self.photo_return = ImageTk.PhotoImage(Image.open('images/returntomenu.png').resize((262, 57), Image.ANTIALIAS))
+            Image.open('images/settingsbackground.png').resize((870, 420), Resampling.LANCZOS))
+        self.photo_save = ImageTk.PhotoImage(Image.open('images/saveandquit.png').resize((262, 57), Resampling.LANCZOS))
+        self.photo_return = ImageTk.PhotoImage(Image.open('images/returntomenu.png').resize((262, 57), Resampling.LANCZOS))
         self.increasebutton = ImageTk.PhotoImage(Image.open('images/increase1.png'))
         self.increasebutton10 = ImageTk.PhotoImage(Image.open('images/increase10.png'))
         self.decreasebutton = ImageTk.PhotoImage(Image.open('images/decrease1.png'))
@@ -120,11 +122,11 @@ class AppGui(tk.Frame):
 
     def create_background(self):
         self.image_logo = Image.open('images/logo.png')
-        self.image_logo = self.image_logo.resize((950, 500), Image.ANTIALIAS)
+        self.image_logo = self.image_logo.resize((950, 500), Resampling.LANCZOS)
         self.photo = ImageTk.PhotoImage(self.image_logo)
 
         self.image_input = Image.open('images/input_form.png')
-        self.resized_image = self.image_input.resize((318, 206), Image.ANTIALIAS)
+        self.resized_image = self.image_input.resize((318, 206), Resampling.LANCZOS)
         self.photo_input = ImageTk.PhotoImage(self.resized_image)
 
         self.canvas = Canvas(root, height=950, width=500)
@@ -132,7 +134,7 @@ class AppGui(tk.Frame):
         self.canvas.create_image(560, 235, image=self.photo_input, anchor=NW)
         # self.canvas.create_window(10,10, anchor=NW, window=self.loginButton)
 
-        self.settingsImage = ImageTk.PhotoImage(Image.open("images/settings.png").resize((230, 50), Image.ANTIALIAS))
+        self.settingsImage = ImageTk.PhotoImage(Image.open("images/settings.png").resize((230, 50), Resampling.LANCZOS))
         self.loginButton = Button(self.canvas, image=self.settingsImage, highlightthickness=0, borderwidth=0, border=0,
                                   command=lambda: (self.savePreviousChoice(),self.canvas.destroy(),  Settings(master=root) ))
         self.loginButton.place(x=20, y=20)
@@ -142,7 +144,7 @@ class AppGui(tk.Frame):
     def create_logic(self, prevUsername="", choice=0):
         self.username = Entry(self.canvas, width=29, fg='black', border=0, bg="white", font=('Minecraftia', 9, 'bold'))
         self.username.place(x=570, y=271)
-        if prevUsername is "":
+        if prevUsername == "":
             self.username.insert(END, "Your username")
         else:
             self.username.insert(END, prevUsername)
@@ -173,7 +175,7 @@ class AppGui(tk.Frame):
             finite.delete(0, END)
             infinite.insert(END, "X")
             infinite.configure(state=DISABLED)
-            if len(infinite.get()) is not 0:
+            if len(infinite.get()) != 0:
                 self.startFiniteInfinite = 0
                 # self.startFinite = False
 
@@ -184,7 +186,7 @@ class AppGui(tk.Frame):
             infinite.delete(0, END)
             finite.insert(END, "X")
             finite.configure(state=DISABLED)
-            if len(finite.get()) is not 0:
+            if len(finite.get()) != 0:
                 self.startFiniteInfinite = actualAmount  # set in options
 
         finite.bind("<Button-1>", onclickFinite)
@@ -195,7 +197,7 @@ class AppGui(tk.Frame):
         # self.radiobutton_finite = Radiobutton(root, text="", variable=r, value=2, image=self.photo_input, height=5).place(x=50, y=150)
 
         self.start_image = Image.open('images/start.png')
-        self.start_button = self.start_image.resize((312, 40), Image.ANTIALIAS)
+        self.start_button = self.start_image.resize((312, 40), Resampling.LANCZOS)
         self.start_button_image = ImageTk.PhotoImage(self.start_button)
         startButton = Button(self.canvas, image=self.start_button_image, borderwidth=0,
                              command=lambda: RunningBot(self.startFiniteInfinite, self.username.get(), self.parent)) #(runApplication(self.startFiniteInfinite, self.username.get(), self.parent))
