@@ -1,24 +1,13 @@
-import tkinter
-
-from pyautogui import *
-import pyautogui
-import time
-import keyboard
-import numpy as np
 import random
-import win32api, win32con
 import string
-# import tkinter as Tk
-from tkinter import *
-from PIL import Image, ImageTk
-import os
-from tkinter import ttk
-import subprocess
-import sys
+import pyautogui
+import win32api
+import win32con
 import win32process
+from pyautogui import *
 
 
-class RunningBot():
+class RunningBot:
     def __init__(self, iterationNumber, playersName, application):
         self.EXE_NAME = r"C:\Program Files (x86)\Goodgame Gangster\Goodgame Gangster.exe"
         self.runApplication(iterationNumber, playersName, application)
@@ -40,12 +29,14 @@ class RunningBot():
                 break
         sleep(1)
         self.fastclick(s.left + 50, s.top + 20)
-        print("clicked")
+        print("self.clicked")
         self.fastclick(s.left + 50, s.top + 20)
-        print("clicked")
+        print("self.clicked")
 
     def checkIfGameRuns(self):
-        s = pyautogui.locateOnScreen("images/screenshot8.png")
+        print("locating")
+        s = pyautogui.locateOnScreen("images/blank.png")
+        print(s)
         if s is None:
             return False
         else:
@@ -57,13 +48,14 @@ class RunningBot():
         sleep(3)
 
         logoutButton = pyautogui.locateOnScreen("images/logout.png")
+        print(logoutButton)
         if logoutButton is not None:
             pyautogui.moveTo(logoutButton)
             win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN, 0, 0)
             time.sleep(0.1)
             win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP, 0, 0)
             time.sleep(0.1)
-            click(960, 730)  # reconnect button
+            self.click(960, 730)  # reconnect button
             sleep(1)
 
         self.iteration(iterationNumber, playersName)  # here we gonna run script
@@ -115,49 +107,49 @@ class RunningBot():
         return result_str
 
     def createAccount(self):
-        click(953, 557)  # new here? button
-        click(1150, 890)  # here we go button
+        self.click(953, 557)  # new here? button
+        self.click(1150, 890)  # here we go button
         # user input
-        click(1143, 519)  # login click
+        self.click(1143, 519)  # login self.click
         self.typeLogin()
-        click(1063, 573)  # email click
+        self.click(1063, 573)  # email self.click
         self.typeEmail()
-        click(1145, 624)  # password click
+        self.click(1145, 624)  # password self.click
         self.typePassword()
-        click(975, 694)  # accept rules
-        click(1136, 900)  # continue
+        self.click(975, 694)  # accept rules
+        self.click(1136, 900)  # continue
         time.sleep(3)
 
     def tutorial(self):
-        click(1045, 544)  # tutorial
-        click(789, 965)  # godfather
-        click(1135, 896)  # okay button
-        click(1549, 486)  # velvet mission
-        click(1264, 719)  # start mission
+        self.click(1045, 544)  # tutorial
+        self.click(789, 965)  # godfather
+        self.click(1135, 896)  # okay button
+        self.click(1549, 486)  # velvet mission
+        self.click(1264, 719)  # start mission
         time.sleep(21)
-        click(668, 721)  # mission start
+        self.click(668, 721)  # mission start
         time.sleep(1)
-        click(959, 875)  # skip battle
-        click(964, 632)  # ok button
+        self.click(959, 875)  # skip battle
+        self.click(964, 632)  # ok button
         time.sleep(0.5)
-        click(1284, 714)  # lvl up notification
-        click(699, 957)  # character tab
-        click(1484, 889)  # ok button
+        self.click(1284, 714)  # lvl up notification
+        self.click(699, 957)  # character tab
+        self.click(1484, 889)  # ok button
         self.clickAndDrag(startX=372, startY=515, endX=1051, endY=604)  # drag pistol
         for i in range(3):
-            click(744, 415)  # add points 3 times
-        click(1039, 974)  # click shop
-        click(1112, 518)  # click consumables
+            self.click(744, 415)  # add points 3 times
+        self.click(1039, 974)  # self.click shop
+        self.click(1112, 518)  # self.click consumables
         self.clickAndDrag(startX=1059, startY=729, endX=372, endY=515)  # buy dynamite
-        click(699, 957)  # character tab
+        self.click(699, 957)  # character tab
         self.clickAndDrag(startX=372, startY=515, endX=1032, endY=694)  # equip dynamite
-        click(646, 679)  # equip button
+        self.click(646, 679)  # equip button
         time.sleep(0.4)
-        click(789, 965)  # godfather
-        click(1187, 672)  # okay button
+        self.click(789, 965)  # godfather
+        self.click(1187, 672)  # okay button
 
     def selling(self):
-        click(699, 957)  # character tab
+        self.click(699, 957)  # character tab
         time.sleep(0.5)
         self.clickAndDrag(startX=1051, startY=604, endX=372, endY=515)  # drag back pistol
         self.clickAndDrag(startX=1032, startY=694, endX=495, endY=526)  # drag back dynamite
@@ -170,16 +162,16 @@ class RunningBot():
         self.clickAndDrag(1316, 359, 710, 615)
         self.clickAndDrag(1446, 351, 820, 608)  # drag 8th slot
 
-        click(1039, 974)  # click shop
+        self.click(1039, 974)  # self.click shop
 
         # selling
         self.clickAndDrag(372, 515, 1524, 611)  # sell pistol
         self.clickAndDrag(495, 526, 1524, 611)  # sell dynamite
-        click(662, 682)
+        self.click(662, 682)
         time.sleep(0.5)
         self.clickAndDrag(605, 526, 1524, 611)  # sell 1st slot
         time.sleep(0.5)
-        click(1247, 624)  # collect gold from achievment
+        self.click(1247, 624)  # collect gold from achievment
         time.sleep(0.5)
         self.clickAndDrag(712, 526, 1524, 611)  # sell 2nd slot
         self.clickAndDrag(814, 527, 1524, 611)  # sell 3rd slot
@@ -190,38 +182,38 @@ class RunningBot():
         self.clickAndDrag(710, 616, 1524, 611)
         self.clickAndDrag(820, 616, 1524, 611)
 
-        click(1302, 514)  # corner shop
+        self.click(1302, 514)  # corner shop
         self.clickAndDrag(1520, 864, 372, 515)  # buy for gold 1
-        click(1017, 635)  # new tab
+        self.click(1017, 635)  # new tab
         self.clickAndDrag(1520, 864, 495, 526, )  # buy for gold 2
 
         time.sleep(0.5)
-        click(660, 720)  # okey stack items
+        self.click(660, 720)  # okey stack items
         time.sleep(0.5)
 
         self.clickAndDrag(372, 515, 1524, 611)  # sell food
-        click(662, 682)  # confirm sell food
+        self.click(662, 682)  # confirm sell food
         time.sleep(0.5)
         self.clickAndDrag(495, 526, 1524, 611)  # sell 2nd food
         time.sleep(1)
 
     def battle(self, name):
-        click(872, 965)  # duel tab
-        click(1151, 744)  # okey button
+        self.click(872, 965)  # duel tab
+        self.click(1151, 744)  # okey button
         for i in range(3):
-            click(784, 552)  # type players name
+            self.click(784, 552)  # type players name
             for i in name:
                 pyautogui.keyDown(i)
-            click(1025, 552)  # confirm
-            click(738, 408)  # attack button
-            click(958, 382)  # start the fight button
-            click(959, 875)  # skip battle
-            click(959, 548)  # okay button
+            self.click(1025, 552)  # confirm
+            self.click(738, 408)  # attack button
+            self.click(958, 382)  # start the fight button
+            self.click(959, 875)  # skip battle
+            self.click(959, 548)  # okay button
 
     def logout(self):
-        click(1588, 58)  # logout button
+        self.click(1588, 58)  # logout button
         time.sleep(2)
-        click(960, 730)  # reconnect button
+        self.click(960, 730)  # reconnect button
         time.sleep(2)
 
     def game(self, name):
@@ -244,8 +236,18 @@ class RunningBot():
     def resotreIfCrashed(self):
         isRunning = self.checkIfGameRuns()
         if not isRunning:
-            self.runAndFullScreen()
             sleep(1800) #sleep if game crashed to avoid crash once again
+            self.runAndFullScreen()
+            logoutButton = pyautogui.locateOnScreen("images/logout.png")
+            if logoutButton is not None:
+                pyautogui.moveTo(logoutButton)
+                win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN, 0, 0)
+                time.sleep(0.1)
+                win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP, 0, 0)
+                time.sleep(0.1)
+                self.click(960, 730)  # reconnect button
+                sleep(1)
+
 
 # if __name__ == "__main__":
 #     iterationNumber = input("Select number of iterations (o for loop): ")
