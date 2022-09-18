@@ -48,7 +48,7 @@ class RunningBot:
         sleep(3)
 
         logoutButton = pyautogui.locateOnScreen("images/logout.png")
-        print(logoutButton)
+        print(logoutButton)#d
         if logoutButton is not None:
             pyautogui.moveTo(logoutButton)
             win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN, 0, 0)
