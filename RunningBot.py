@@ -236,7 +236,7 @@ class RunningBot:
     def resotreIfCrashed(self):
         isRunning = self.checkIfGameRuns()
         if not isRunning:
-            sleep(1800) #sleep if game crashed to avoid crash once again
+            sleep(1800) #sleep if game crashed to avoid crash once again#
             self.runAndFullScreen()
             logoutButton = pyautogui.locateOnScreen("images/logout.png")
             if logoutButton is not None:
