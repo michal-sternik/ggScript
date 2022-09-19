@@ -255,4 +255,3 @@ class RunningBot:
 #     #enter amount=0 for infinite loop
 #     iteration(iterationNumber, playersName)
 #     input("Press any key to exit...")
-#test for github
