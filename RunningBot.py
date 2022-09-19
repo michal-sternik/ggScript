@@ -48,7 +48,7 @@ class RunningBot:
         sleep(3)
 
         logoutButton = pyautogui.locateOnScreen("images/logout.png")
-        print(logoutButton)#d
+        print(logoutButton)
         if logoutButton is not None:
             pyautogui.moveTo(logoutButton)
             win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN, 0, 0)
@@ -242,11 +242,11 @@ class RunningBot:
             if logoutButton is not None:
                 pyautogui.moveTo(logoutButton)
                 win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN, 0, 0)
-                time.sleep(0.1)
+                time.sleep(0.3)
                 win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP, 0, 0)
-                time.sleep(0.1)
+                time.sleep(0.5)
                 self.click(960, 730)  # reconnect button
-                sleep(1)
+                sleep(2)
 
 
 # if __name__ == "__main__":
