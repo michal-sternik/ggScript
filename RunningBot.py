@@ -35,7 +35,7 @@ class RunningBot:
 
     def checkIfGameRuns(self):
         print("locating")
-        s = pyautogui.locateOnScreen("images/blank.png")
+        s = pyautogui.locateOnScreen("images/9.png")
         print(s)
         if s is None:
             return False
