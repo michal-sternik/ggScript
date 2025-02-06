@@ -21,6 +21,7 @@ So grind first level and once you're happy with the results you can proceed furt
 - (optional) Enter number of iterations
 - Press start
 - (optional) If you entered wrong image during configuration - go to "Settings" and "Clear" button.
+- If you want to stop the script (because of some bug) then Ctrl+Alt+Delete and Cancel <- use this if pyautogui fail-safe procedure won't work
 
 Currently works on World 1 server. So if you want to use it - create new account on world 1.
 
