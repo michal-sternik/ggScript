@@ -1,15 +1,28 @@
 import random
 import string
+import sys
+import time
+from tkinter import messagebox, Toplevel, Label, Button
+
 import pyautogui
 import win32api
 import win32con
 import win32process
 from pyautogui import *
+from PIL import Image, ImageTk
+# from ggscrpit import runApplication
+from PIL.Image import Resampling
+
+from utils import resource_path
 
 
 class RunningBot:
+    EXE_NAME = None
+
     def __init__(self, iterationNumber, playersName, application):
-        self.EXE_NAME = r"C:\Program Files (x86)\Goodgame Gangster\Goodgame Gangster.exe"
+        if not self.EXE_NAME:
+            raise ValueError("Path to .exe file is not set. Please run the setup first.")
+        self.application = application
         self.runApplication(iterationNumber, playersName, application)
 
     def main(self):
@@ -19,44 +32,168 @@ class RunningBot:
         h_proc, h_thr, pid, tid = win32process.CreateProcess(None, self.EXE_NAME, None, None, False, 0, None, None, si)
         print(h_proc, h_thr, pid, tid)
 
-    def runAndFullScreen(self):
-        self.main()
-        s = None
-        while True:
-            if s is None:
-                s = pyautogui.locateOnScreen("images/screenshot8.png")
-            else:
-                break
-        sleep(1)
-        self.fastclick(s.left + 50, s.top + 20)
-        print("self.clicked")
-        self.fastclick(s.left + 50, s.top + 20)
-        print("self.clicked")
+    def custom_message_with_image(self, image_path):
+        dialog = Toplevel(self.application)
+        dialog.title(f"Image {image_path} not found on the screen")
+        dialog.geometry("500x400")
+        dialog.configure(bg="#FFF3E6")
+
+        text_label = Label(dialog,
+                           text=f'Image {image_path} not found on the screen.',
+                           bg="#FFF3E6",
+                           font=("Arial", 12))
+        text_label.pack(pady=10)
+
+        image_path = f"images/logic/{image_path}"
+        img = Image.open(resource_path(image_path))
+        # img = img.resize((200, 150), Image.Resampling.LANCZOS)
+        max_height = 150
+
+        original_width, original_height = img.size
+
+        aspect_ratio = original_width / original_height
+        new_width = int(max_height * aspect_ratio)
+
+        img = img.resize((new_width, max_height), Resampling.LANCZOS)
+        photo = ImageTk.PhotoImage(img)
+
+        img_label = Label(dialog, image=photo, bg="#FFF3E6")
+        img_label.image = photo
+        img_label.pack(pady=10)
+
+        text_label = Label(dialog,
+                           text='Try to clear the data in "Settings"\nand load a better image (without background clutter).',
+                           bg="#FFF3E6",
+                           font=("Arial", 12))
+        text_label.pack(pady=10)
+
+        ok_button = Button(dialog, text="OK", command=lambda: self.close_dialog(dialog))
+        ok_button.pack(pady=10)
+
+    def close_dialog(self, dialog):
+        dialog.destroy()
+
+        if self.application.winfo_exists():
+            self.application.destroy()  #
+        sys.exit()
+
+
+    def close_goodgame_gangster(self):
+        process_list = win32process.EnumProcesses()
+
+        for pid in process_list:
+            try:
+                h_process = win32api.OpenProcess(win32con.PROCESS_QUERY_INFORMATION | win32con.PROCESS_TERMINATE, False,
+                                                 pid)
+                exe_name = win32process.GetModuleFileNameEx(h_process, 0)
+
+                if "Goodgame Gangster.exe" in exe_name:
+                    # print(f"Zamykanie procesu: {exe_name} (PID: {pid})")
+                    win32api.TerminateProcess(h_process, 0)
+                    win32api.CloseHandle(h_process)
+                    # print("Proces został zamknięty.")
+                    return
+                win32api.CloseHandle(h_process)
+            except Exception as e:
+                continue
+
+        # print("Nie znaleziono procesu Goodgame Gangster.exe.")
 
     def checkIfGameRuns(self):
-        print("locating")
-        s = pyautogui.locateOnScreen("images/9.png")
-        print(s)
-        if s is None:
-            return False
-        else:
-            return True
+
+        process_list = win32process.EnumProcesses()
+
+        for pid in process_list:
+            try:
+                h_process = win32api.OpenProcess(win32con.PROCESS_QUERY_INFORMATION | win32con.PROCESS_TERMINATE, False,
+                                                 pid)
+                exe_name = win32process.GetModuleFileNameEx(h_process, 0)
+
+                if "Goodgame Gangster.exe" in exe_name:
+                    return True
+
+            except Exception as e:
+                continue
+        return False;
+
+    def actionRepeated(self, action, path):
+
+        for i in range(0, 5):
+            try:
+                sleep(1)
+                returnValue = action()
+                if (returnValue):
+                    return returnValue
+            except:
+                if i == 4:
+                    # messagebox.showinfo("Image not found", 'Try to clear the data in "Settings" and load better image (without stuff in the background)');
+                    self.close_goodgame_gangster()
+                    self.custom_message_with_image(path)
+
+                    # self.application.destroy()
+                    # sys.exit()
+
+    def runAndFullScreen(self):
+        self.main()
+        # sleep(5)
+
+        # fullscreen coords
+        fullscreen = self.actionRepeated(lambda: pyautogui.locateCenterOnScreen(resource_path("images/logic/fullscreen.png"), confidence=0.9),
+                                   "fullscreen.png")
+
+        if(fullscreen):
+            x, y = fullscreen
+        else: return
+        # s = None
+        # while True:
+        #     if s is None:
+        # x = list(pyautogui.locateAllOnScreen("images/app_header.png", confidence=0.45))
+        # print(x)
+        # x, y = pyautogui.locateCenterOnScreen("images/logic/fullscreen.png")
+        print(x, y)
+        # else:
+        #     break
+        sleep(1)
+        self.fastclick(x, y)
+        print("self.clicked")
+        self.fastclick(x, y)
+        print("self.clicked")
+
+    # def checkIfGameRuns(self):
+    #     print("locating")
+    #     time.sleep(1)
+    #     s = pyautogui.locateOnScreen("images/logic/mainscreen.png", confidence=0.9)
+    #     if (s):
+    #         return True
+    #     else:
+    #         return False
 
     def runApplication(self, iterationNumber, playersName, application):
-        application.destroy()
+        # application.destroy()
         self.runAndFullScreen()
-        sleep(3)
+        sleep(2)
 
-        logoutButton = pyautogui.locateOnScreen("images/logout.png")
-        print(logoutButton)
-        if logoutButton is not None:
-            pyautogui.moveTo(logoutButton)
+        # logoutButton = pyautogui.locateOnScreen("images/logout.png")
+        try:
+            logoutButtonX, logoutButtonY = self.actionRepeated(
+                lambda: pyautogui.locateCenterOnScreen(resource_path("images/logic/logout.png"), confidence=0.9), "logout.png")
+            print(f"Logoutbutton {logoutButtonX}, {logoutButtonY}");
+        except pyautogui.ImageNotFoundException:
+            logoutButton = None
+            print(f"Logoutbutton-none {logoutButton}");
+            return
+
+        if logoutButtonX is not None:
+            sleep(1)
+            pyautogui.moveTo(logoutButtonX, logoutButtonY)
             win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN, 0, 0)
             time.sleep(0.1)
             win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP, 0, 0)
             time.sleep(0.1)
             self.click(960, 730)  # reconnect button
-            sleep(1)
+            sleep(2)
+
+        print(f"game runs: {self.checkIfGameRuns()}")
 
         self.iteration(iterationNumber, playersName)  # here we gonna run script
         print("Iterations done!")
@@ -81,6 +218,7 @@ class RunningBot:
         win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN, 0, 0)
         time.sleep(0.5)
         win32api.SetCursorPos((endX, endY))
+        time.sleep(0.5)
         win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP, 0, 0)
         time.sleep(0.5)
 
@@ -142,7 +280,7 @@ class RunningBot:
         self.click(1112, 518)  # self.click consumables
         self.clickAndDrag(startX=1059, startY=729, endX=372, endY=515)  # buy dynamite
         self.click(699, 957)  # character tab
-        self.clickAndDrag(startX=372, startY=515, endX=1032, endY=694)  # equip dynamite
+        self.clickAndDrag(startX=372, startY=515, endX=1022, endY=694)  # equip dynamite
         self.click(646, 679)  # equip button
         time.sleep(0.4)
         self.click(789, 965)  # godfather
@@ -236,18 +374,21 @@ class RunningBot:
     def resotreIfCrashed(self):
         isRunning = self.checkIfGameRuns()
         if not isRunning:
-            sleep(1800) #sleep if game crashed to avoid crash once again#
+            sleep(1800)  # sleep if game crashed to avoid crash once again#
             self.runAndFullScreen()
-            logoutButton = pyautogui.locateOnScreen("images/logout.png")
+            # logoutButton = pyautogui.locateOnScreen("images/logic/logout.png")
+            logoutButton = self.actionRepeated(
+                lambda: pyautogui.locateCenterOnScreen(resource_path("images/logic/logout.png"), confidence=0.9), "logout.png")
+            # print(f"Logoutbutton {logoutButtonX}, {logoutButtonY}");
             if logoutButton is not None:
-                pyautogui.moveTo(logoutButton)
+                logoutButtonX, logoutButtonY = logoutButton
+                pyautogui.moveTo(logoutButtonX, logoutButtonY)
                 win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN, 0, 0)
                 time.sleep(0.3)
                 win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP, 0, 0)
                 time.sleep(0.5)
                 self.click(960, 730)  # reconnect button
                 sleep(2)
-
 
 # if __name__ == "__main__":
 #     iterationNumber = input("Select number of iterations (o for loop): ")
